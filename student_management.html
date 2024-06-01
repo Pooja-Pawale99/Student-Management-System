@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+	body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+	color:purple;
+}
+
+form {
+    margin-bottom: 20px;
+	padding:20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+	</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Management System</h1>
+        <form id="studentForm">
+            <label for="studentId">Student ID:</label>
+            <input type="text" id="studentId" required>
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            <label for="age">Age:</label>
+            <input type="number" id="age" required>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" required>
+            <label for="gender">Gender:</label>
+            <select id="gender" required>
+			<option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              
+            </select>
+            <label for="department">Department:</label>
+            <select id="department"  required>
+			  <option value="">Select department</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Computer Application">Computer Application</option>
+                <option value="Microbiology">Microbiology</option>
+				<option value="Biotechnology">Biotechnology</option>
+				<option value="Engineering">Engineering</option>
+            </select>
+            <button type="submit">Add Student</button>
+        </form>
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
+                    <th>Department</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+<tbody>
+</tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+	$(document).ready(function() {
+    var students = [];
+
+    function displayStudents() {
+        var tableBody = $('#studentTable tbody');
+        tableBody.empty();
+        students.forEach(function(student, index) {
+            var row = $('<tr>');
+            row.append('<td>' + student.studentId + '</td>');
+            row.append('<td>' + student.name + '</td>');
+            row.append('<td>' + student.age + '</td>');
+            row.append('<td>' + student.dob + '</td>');
+            row.append('<td>' + student.gender + '</td>');
+            row.append('<td>' + student.department + '</td>');
+            var actions = $('<td class="actions">');
+            actions.append('<button class="edit" data-index="' + index + '">Edit</button>');
+            actions.append('<button class="delete" data-index="' + index + '">Delete</button>');
+            row.append(actions);
+            tableBody.append(row);
+        });
+    }
+
+    $('#studentForm').submit(function(event) {
+        event.preventDefault();
+        var studentId = $('#studentId').val();
+        var name = $('#name').val();
+        var age = $('#age').val();
+        var dob = $('#dob').val();
+        var gender = $('#gender').val();
+        var department = $('#department').val();
+        if (studentId && name && age && dob && gender && department) {
+            students.push({studentId: studentId, name: name, age: age, dob: dob, gender: gender, department: department});
+            displayStudents();
+            $('#studentId').val('');
+            $('#name').val('');
+            $('#age').val('');
+            $('#dob').val('');
+            $('#gender').val('');
+            $('#department').val('');
+        } else {
+            alert('Please fill in all fields.');
+        }
+    });
+
+    $('#studentTable').on('click', '.delete', function() {
+        var index = $(this).data('index');
+        students.splice(index, 1);
+        displayStudents();
+    });
+
+    $('#studentTable').on('click', '.edit', function() {
+        var index = $(this).data('index');
+        var student = students[index];
+        var newStudentId = prompt('Enter new student ID:', student.studentId);
+        var newName = prompt('Enter new name:', student.name);
+        var newAge = prompt('Enter new age:', student.age);
+        var newDob = prompt('Enter new date of birth:', student.dob);
+        var newGender = prompt('Enter new gender:', student.gender);
+        var newDepartment = prompt('Enter new department:', student.department);
+        if (newStudentId && newName && newAge && newDob && newGender && newDepartment) {
+            students[index] = {studentId: newStudentId, name: newName, age: newAge, dob: newDob, gender: newGender, department: newDepartment};
+            displayStudents();
+        }
+    });
+});
+</script>
+</body>
+</html>
